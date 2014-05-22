@@ -44,16 +44,15 @@ YUV_Init(struct YUV_Info * s_yuv_info,
 	s_yuv_info->pixel_size = pixel_size;
 
 	// calculate the frame numbers
-	fseek(fp_input_file, 0, SEEK_END);
-	uint64_t file_size = ftell(fp_input_file);
-	fseek(fp_input_file, 0, SEEK_SET);
+	//fseek(fp_input_file, 0, SEEK_END);
+	//uint64_t file_size = ftell(fp_input_file);
+	//fseek(fp_input_file, 0, SEEK_SET);
+	struct stat st;
+	stat(s_yuv_info->input_file_name, &st);
+	off_t file_size = st.st_size;
 	long frame_size = s_yuv_info->y_width * s_yuv_info->y_height / 2 * 3 * pixel_size;
 	s_yuv_info->frame_size = frame_size;
 	s_yuv_info->frame_num = file_size / frame_size;
-
-	struct stat st;
-	stat(s_yuv_info->input_file_name, &st);
-	printf("file_size in off_t = %lld\n", st.st_size);
 
 	// allocate memory for convert buff Y_space
 	*p_Y_space = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
@@ -88,9 +87,6 @@ WriteImage(struct YUV_Info * s_yuv_info,
 	int y_height = s_yuv_info->y_height;
 	int frame_size = y_width * y_height;
 	int pixel_size = s_yuv_info->pixel_size;
-
-
-	//fseek(fp_output_file, 0, SEEK_END);
 
 	for(int i = 0; i < frame_size; i++){
 		fwrite(p_Y_space + i * pixel_size, pixel_size, 1, fp_output_file);
