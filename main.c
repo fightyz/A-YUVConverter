@@ -1,6 +1,7 @@
 //test.exe -i in.yuv -r 2560x1600 -o out.yuv -b 8
 
 #include "yuv.h"
+#include <sys/stat.h>
 
 int
 main(int argc, char * argv[]){
@@ -15,6 +16,7 @@ main(int argc, char * argv[]){
 	}
 	unsigned char * p_Y_space; //<buff for convert per frame
 	YUV_Init(s_yuv_info, fp_input_file, &p_Y_space);
+	printf("frame_num = %ld\n", s_yuv_info->frame_num);
 
 	long origin = 0;
 	for(long j = 0; j < s_yuv_info->frame_num; j++){

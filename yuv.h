@@ -19,6 +19,8 @@ struct YUV_Info
 	int bit_depth;
 	long frame_num;
 	long frame_size;
+
+	int pixel_size;
 };
 
 void
