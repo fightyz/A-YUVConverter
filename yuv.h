@@ -17,5 +17,15 @@ struct YUV_Info
 	char * output_file_name;
 
 	int bit_depth;
-	int frame_num;
+	long frame_num;
+	long frame_size;
 };
+
+void
+GetInfo(int argc, char * const argv[], struct YUV_Info * s_yuv_info);
+void
+YUV_Init(struct YUV_Info * s_yuv_info, FILE * fp_input_file, unsigned char ** p_Y_space);
+void
+ReadImage(struct YUV_Info * s_yuv_info, unsigned char * p_Y_space, FILE * fp_input_file, long offset);
+void
+WriteImage(struct YUV_Info * s_yuv_info, unsigned char * p_Y_space, FILE * fp_output_file);
