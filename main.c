@@ -3,6 +3,7 @@
 #include "yuv.h"
 #include <sys/stat.h>
 #include <pthread.h>
+#include <time.h>
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -34,6 +35,9 @@ void * WriteYUVFunction(void * write_thread_data){
 
 int
 main(int argc, char * argv[]){
+	time_t start, finish;
+	start = time(NULL);
+
 	struct YUV_Info * s_yuv_info = malloc(sizeof(struct YUV_Info));
 	GetInfo(argc, argv, s_yuv_info);
 
@@ -79,6 +83,9 @@ main(int argc, char * argv[]){
 	free(p_Y_space);
 	fclose(fp_input_file);
 	fclose(fp_output_file);
+
+	finish = time(NULL);
+	fprintf(stdout, "time: %f\n", difftime(finish, start));
 
 	return 0;
 }
