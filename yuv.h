@@ -23,6 +23,18 @@ struct YUV_Info
 	int pixel_size;
 };
 
+typedef struct {
+	struct YUV_Info * p_yuv_info;
+	unsigned char * p_Y_space;
+	FILE * fp_input_file;
+} s_read_thread_data;
+
+typedef struct {
+	struct YUV_Info * p_yuv_info;
+	unsigned char * p_Y_space;
+	FILE * fp_output_file;
+} s_write_thread_data;
+
 void
 GetInfo(int argc, char * const argv[], struct YUV_Info * s_yuv_info);
 void
