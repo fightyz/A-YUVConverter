@@ -27,11 +27,12 @@ typedef struct {
 	struct YUV_Info * p_yuv_info;
 	unsigned char * p_Y_space;
 	FILE * fp_input_file;
+	int thread_num;
 } s_read_thread_data;
 
 typedef struct {
 	struct YUV_Info * p_yuv_info;
-	unsigned char * p_Y_space;
+	unsigned char * *p_Y_space;
 	FILE * fp_output_file;
 } s_write_thread_data;
 

@@ -55,7 +55,8 @@ YUV_Init(struct YUV_Info * s_yuv_info,
 	s_yuv_info->frame_num = file_size / frame_size;
 
 	// allocate memory for convert buff Y_space
-	*p_Y_space = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
+	p_Y_space[0] = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
+	p_Y_space[1] = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
 }
 
 void
