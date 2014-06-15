@@ -6,7 +6,7 @@
 void
 GetInfo(int argc,
 		char * const argv[],
-		struct YUV_Info * s_yuv_info)
+		yuv_info * s_yuv_info)
 {
 	int opt;
 	while((opt = getopt(argc, argv, "i:o:r:b:")) != -1){
@@ -31,8 +31,7 @@ GetInfo(int argc,
 }
 
 void
-YUV_Init(struct YUV_Info * s_yuv_info,
-		 FILE * fp_input_file,
+YUVInit(yuv_info * s_yuv_info,
 		 unsigned char ** p_Y_space)
 {
 	s_yuv_info->u_width = s_yuv_info->v_width = s_yuv_info->y_width;
@@ -43,10 +42,6 @@ YUV_Init(struct YUV_Info * s_yuv_info,
 	: s_yuv_info->bit_depth / 8;
 	s_yuv_info->pixel_size = pixel_size;
 
-	// calculate the frame numbers
-	//fseek(fp_input_file, 0, SEEK_END);
-	//uint64_t file_size = ftell(fp_input_file);
-	//fseek(fp_input_file, 0, SEEK_SET);
 	struct stat st;
 	stat(s_yuv_info->input_file_name, &st);
 	off_t file_size = st.st_size;
@@ -55,11 +50,12 @@ YUV_Init(struct YUV_Info * s_yuv_info,
 	s_yuv_info->frame_num = file_size / frame_size;
 
 	// allocate memory for convert buff Y_space
-	*p_Y_space = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
+	p_Y_space[0] = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
+	p_Y_space[1] = malloc(s_yuv_info->y_width * s_yuv_info->y_height * pixel_size);
 }
 
 void
-ReadImage(struct YUV_Info * s_yuv_info,
+ReadImage(yuv_info * s_yuv_info,
 		  unsigned char * p_Y_space,
 		  FILE * fp_input_file,
 		  long offset)
@@ -71,15 +67,11 @@ ReadImage(struct YUV_Info * s_yuv_info,
 
 	fseek(fp_input_file, offset, SEEK_SET);
 	p_work = p_Y_space;
-	for(int i = 0; i < height; i++, p_work += width * pixel_size){
-		for(int j = 0; j < width; j++){
-			fread(p_work + j * pixel_size, pixel_size, 1, fp_input_file);
-		}
-	}
+	fread(p_work, pixel_size, width * height, fp_input_file);
 }
 
 void
-WriteImage(struct YUV_Info * s_yuv_info,
+WriteImage(yuv_info * s_yuv_info,
 		   unsigned char * p_Y_space,
 		   FILE * fp_output_file)
 {
@@ -88,7 +80,5 @@ WriteImage(struct YUV_Info * s_yuv_info,
 	int frame_size = y_width * y_height;
 	int pixel_size = s_yuv_info->pixel_size;
 
-	for(int i = 0; i < frame_size; i++){
-		fwrite(p_Y_space + i * pixel_size, pixel_size, 1, fp_output_file);
-	}
+	fwrite(p_Y_space, pixel_size, frame_size, fp_output_file);
 }
